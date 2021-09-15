@@ -1,8 +1,10 @@
-x = 4
-print(x)
-x = x + 1
-print(x + 1)
-print(x + 1)
+def calculate_average(a, b):
+    result = (a + b) / 2
+    return result
 
-# same as line 3
-x += 1
+
+x = 45
+y = 56
+
+z = calculate_average(x, y)
+print(z)
