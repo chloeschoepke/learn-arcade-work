@@ -1,5 +1,5 @@
 """
-Drawing birds on a powerline at sunset
+Drawing skyline at sunrise
 """
 
 import arcade
