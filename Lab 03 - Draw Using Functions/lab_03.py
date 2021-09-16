@@ -1,5 +1,5 @@
 """
-Drawing skyline at sunrise
+Drawing skyline at sunset
 """
 
 import arcade
