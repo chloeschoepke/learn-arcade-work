@@ -30,7 +30,6 @@ def main():
     done = False
 
     while not done:
-        security_behind = miles_traveled - security_traveled
 
         choice_options()
         choice = input("What is your choice? ")
@@ -44,6 +43,7 @@ def main():
         elif choice.upper() == "E":
             print("Miles traveled:", miles_traveled)
             print("Drinks in Hydroflask:", hydroflask)
+            security_behind = miles_traveled - security_traveled
             print("Security is", security_behind, "miles behind you.")
 
         # choice break
@@ -61,6 +61,15 @@ def main():
             elephant_tiredness += random.randrange(1, 3)
             security_traveled += random.randrange(7, 14)
             oasis = random.randrange(1, 20)
+            # five is my lucky number
+            if oasis == 5 and not done:
+                elephant_tiredness = 0
+                thirst = 0
+                hydroflask = 0
+                print("You found a bar!")
+                print("After you impressed the owner with your elephant, "
+                      "he refilled your Hydroflask and gave the elephant a snack!")
+
         # choice moderate speed
         elif choice.upper() == "B":
             moderate_speed = random.randrange(5, 12)
@@ -70,6 +79,14 @@ def main():
             elephant_tiredness += 1
             security_traveled += random.randrange(7, 12)
             oasis = random.randrange(1, 20)
+            # five is my lucky number
+            if oasis == 5 and not done:
+                elephant_tiredness = 0
+                thirst = 0
+                hydroflask = 0
+                print("You found a bar!")
+                print("After you impressed the owner with your elephant, "
+                      "he refilled your Hydroflask and gave the elephant a snack!")
 
         # choice drink
         elif choice.upper() == "A":
@@ -106,14 +123,7 @@ def main():
         if miles_traveled >= 200 and not done:
             print("You have successfully made it home and acquired a new pet, congrats!")
 
-        # five is my lucky number
-        if oasis == 5 and not done:
-            elephant_tiredness = 0
-            thirst = 0
-            hydroflask = 0
-            print("You found a bar!")
-            print("After you impressed the owner with your elephant, "
-                  "he refilled your Hydroflask and gave the elephant a snack!")
+
 
 
 main()
