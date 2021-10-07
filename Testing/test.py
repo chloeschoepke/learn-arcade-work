@@ -1,4 +1,13 @@
-months = "JanFebMarAprMayJunJulAugSepOctNovDec"
-n = int(input("Enter a month number: "))
-month = months[(n - 1) * 3:(n - 1) * 3+ 3]
-print(month)
+class Address:
+    '''
+    this is a video game character
+    '''
+    def_init_(self):
+        self.name = ""
+        self.outfit = ""
+        self.max_hit_point = 0
+
+def main():
+    home_address = Address()
+    home_address.name = "John Smith"
+main()
