@@ -11,7 +11,6 @@ class Room:
 
 
 def main():
-    done = False
 
     room_list = []
     # Room 0 Foyer
@@ -48,10 +47,11 @@ def main():
                 "You can return to the kitchen to the west.", None, None, 3, None)
     room_list.append(room)
 
+    done = False
+    current_room = 0
+
     while not done:
 
-        done = False
-        current_room = 0
         print()
         print(room_list[current_room].description)
         choice = input("What will you do? ")
@@ -61,7 +61,7 @@ def main():
             done = True
 
         # User chose to go north
-        if choice.upper() == "N" or "NORTH":
+        elif choice.upper() == "N" or choice.upper() == "NORTH":
             next_room = room_list[current_room].north
             if next_room is None and not done:
                 print("You cannot go that way!")
@@ -69,7 +69,7 @@ def main():
                 current_room = next_room
 
         # User chose to go east
-        elif choice.upper() == "E" or "EAST":
+        elif choice.upper() == "E" or choice.upper() == "EAST":
             next_room = room_list[current_room].east
             if next_room is None and not done:
                 print("You cannot go that way!")
@@ -77,7 +77,7 @@ def main():
                 current_room = next_room
 
         # User chose to go south
-        elif choice.upper() == "S" or "SOUTH":
+        elif choice.upper() == "S" or choice.upper() == "SOUTH":
             next_room = room_list[current_room].south
             if next_room is None and not done:
                 print("You cannot go that way!")
@@ -85,7 +85,7 @@ def main():
                 current_room = next_room
 
         # User chose to go west
-        elif choice.upper() == "W" or "WEST":
+        elif choice.upper() == "W" or choice.upper() == "WEST":
             next_room = room_list[current_room].west
             if next_room is None and not done:
                 print("You cannot go that way!")
@@ -95,7 +95,6 @@ def main():
         # Program doesn't understand
         else:
             print("I don't understand what you are saying, please try something else.")
-
 
 
 main()
