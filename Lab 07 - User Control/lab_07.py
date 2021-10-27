@@ -33,6 +33,7 @@ class Bird:
         self.change_x = change_x
         self.change_y = change_y
         self.color = color
+        self.error_sound = arcade.load_sound("error4.wav")
 
     def draw(self):
         x = self.position_x
@@ -48,15 +49,19 @@ class Bird:
 
         if self.position_x < 60:
             self.position_x = 60
+            arcade.play_sound(self.error_sound)
 
         if self.position_x > SCREEN_WIDTH - 60:
             self.position_x = SCREEN_WIDTH - 60
+            arcade.play_sound(self.error_sound)
 
         if self.position_y < 60:
             self.position_y = 60
+            arcade.play_sound(self.error_sound)
 
         if self.position_y > SCREEN_HEIGHT - 60:
             self.position_y = SCREEN_HEIGHT - 60
+            arcade.play_sound(self.error_sound)
 
 
 class MyGame(arcade.Window):
@@ -66,6 +71,7 @@ class MyGame(arcade.Window):
         self.set_mouse_visible(False)
         self.cloud = Cloud(50, 50, arcade.color.WHITE)
         self.bird = Bird(100, 100, 0, 0, arcade.color.BLACK)
+        self.laser_sound = arcade.load_sound("laser.wav")
 
     def on_draw(self):
         arcade.start_render()
@@ -78,6 +84,10 @@ class MyGame(arcade.Window):
         Happens approximately 60 times per second."""
         self.cloud.position_x = x
         self.cloud.position_y = y
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if button == arcade.MOUSE_BUTTON_LEFT or button == arcade.MOUSE_BUTTON_RIGHT:
+            arcade.play_sound(self.laser_sound)
 
     def update(self, delta_time):
         self.bird.update()
