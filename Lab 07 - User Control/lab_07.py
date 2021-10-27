@@ -76,8 +76,6 @@ class MyGame(arcade.Window):
         self.bird.draw()
 
     def on_mouse_motion(self, x, y, dx, dy):
-        """ Called to update our objects.
-        Happens approximately 60 times per second."""
         self.cloud.position_x = x
         self.cloud.position_y = y
 
@@ -85,7 +83,7 @@ class MyGame(arcade.Window):
         if button == arcade.MOUSE_BUTTON_LEFT or button == arcade.MOUSE_BUTTON_RIGHT:
             arcade.play_sound(self.laser_sound)
 
-    def off_screen(self, x, y):
+    def off_screen(self, position_x, position_y):
         if self.position_x < 60 or self.position_x > SCREEN_WIDTH - 60:
             arcade.play_sound(self.error_sound)
 
