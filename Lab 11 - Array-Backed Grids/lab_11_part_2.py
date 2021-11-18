@@ -72,8 +72,6 @@ class MyGame(arcade.Window):
         column = x // (WIDTH + MARGIN)
         row = y // (HEIGHT + MARGIN)
 
-        print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
-
         # Make sure we are on-grid. It is possible to click in the upper right
         # corner in the margin and go to a grid location that doesn't exist
         if row < ROW_COUNT and column < COLUMN_COUNT:
@@ -83,6 +81,35 @@ class MyGame(arcade.Window):
                 self.grid[row][column] = 1
             else:
                 self.grid[row][column] = 0
+
+        total_cells = 0
+        for row in range(ROW_COUNT):
+            for column in range(COLUMN_COUNT):
+                if self.grid[row][column] == 1:
+                    total_cells += 1
+        print("Total of", total_cells, "cells are selected.")
+
+        for row in range(ROW_COUNT):
+            row_total = 0
+            continuous_count = 0
+            for column in range(COLUMN_COUNT):
+                if self.grid[row][column] == 1:
+                    row_total += 1
+                    continuous_count += 1
+                if self.grid[row][column] == 0:
+                    if continuous_count > 2:
+                        print("There are", continuous_count, "continuous blocks selected on row", row)
+                    continuous_count = 0
+            if continuous_count > 2:
+                print("There are", continuous_count, "continuous blocks selected on row", row)
+            print("Row", row, "has", row_total, "cells are selected.")
+
+        for column in range(COLUMN_COUNT):
+            column_total = 0
+            for row in range(ROW_COUNT):
+                if self.grid[row][column] == 1:
+                    column_total += 1
+            print("Column", column, "has", column_total, "cells are selected.")
 
 
 def main():
