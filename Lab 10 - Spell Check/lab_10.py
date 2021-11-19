@@ -1,11 +1,8 @@
 import re
 
-# This function takes in a line of text and returns
-# a list of words in the line.
-def split_line(line):
-    return re.findall('[A-Za-z]+(?:\'[A-Za-z]+)?',line)
 
-word_list = 0
+def split_line(line):
+    return re.findall('[A-Za-z]+(?:\'[A-Za-z]+)?', line)
 
 
 def main():
@@ -15,24 +12,55 @@ def main():
     for line in dictionary:
         line = line.strip()
         dictionary_list.append(line)
-
     dictionary.close()
-
     print("---Linear Search---")
 
-    text = open("AliceInWonderLand200.txt")
+    alice_file = open("AliceInWonderLand200.txt")
+    line_number = 0
 
-    for line in text:
-        result = split_line(line)
-        word_list = result
+    for line in alice_file:
+        line_number += 1
+        word_list = split_line(line)
 
-        for item in word_list():
+        for word in word_list:
+            current_list_position = 0
 
+            while current_list_position < len(dictionary_list) and dictionary_list[current_list_position] != word.upper():
+                current_list_position += 1
 
+            if current_list_position == len(dictionary_list):
+                print("line " + str(line_number) + " Possible Misspelled word: " + word)
 
-    text.close
+    alice_file.close
 
-print(word_list)
+    print("---Binary Search---")
+    alice_file = open("AliceInWonderLand200.txt")
+    line_number = 0
+    for line in alice_file:
+        line_number += 1
+        word_list = split_line(line)
+
+        for word in word_list:
+            lower_bound = 0
+            upper_bound = len(dictionary_list) - 1
+            found = False
+
+            while lower_bound <= upper_bound and not found:
+                middle_pos = (lower_bound + upper_bound) // 2
+
+                if dictionary_list[middle_pos] < word.upper():
+                    lower_bound = middle_pos + 1
+
+                elif dictionary_list[middle_pos] > word.upper():
+                    upper_bound = middle_pos - 1
+
+                else:
+                    found = True
+
+            if not found:
+                print("line " + str(line_number) + " Possible Misspelled word: " + word)
+
+    alice_file.close()
 
 
 main()
