@@ -73,5 +73,128 @@ Go back and re-read how this sort works.)
 7    11   14   17   24   37   50   88   99    9
 7    9    11   14   17   24   37   50   88   99
 
+8. Explain what `min_pos` does in the selection sort.
+min_pos is the storing area for the information on what position has the smallest number as
+the loop goes through the array. If a smaller number is found that position is set to the min_pos
+
+9. Explain what `cur_pos` does in the selection sort.
+cur_pos is the current position as the loop scans through the array,
+
+10. Explain what `scan_pos` does in the selection sort.
+scan_pos scans from the end of the list to determine if it is the smallest, if the number in the
+scan position is less than the min_pos it gets set to the min_pos.
+
+11. Explain what `key_pos` and `key_value` are in the insertion sort.
+key_pos marks the boundary between the sorted and unsorted portions of the list starting at the
+second element where that element is used to insert into the list.
+key_value is the value in the array held in key_pos that gets inserted once everything is moved
+out of the way this is the value that is reinserted into the correct location
+
+12. Explain `scan_pos` in the insertion sort.
+In the insertion sort scan_pos goes down to the left and is where the algorithm scans through at one less
+than the key_pos the scam_pos determines how to shift all the elements following insertion
 
 
+13. Look at the example sort program at the very end of this chapter:
+import random
+
+
+def selection_sort(my_list):
+    """ Sort a list using the selection sort """
+    selection_outside_loop = 0
+    selection_inside_loop = 0
+    # Loop through the entire array
+    for cur_pos in range(len(my_list)):
+        # Find the position that has the smallest number
+        # Start with the current position
+        min_pos = cur_pos
+        selection_outside_loop += 1
+
+        # Scan left to right (end of the list)
+        for scan_pos in range(cur_pos + 1, len(my_list)):
+            selection_inside_loop += 1
+            # Is this position smallest?
+            if my_list[scan_pos] < my_list[min_pos]:
+                # It is, mark this position as the smallest
+                min_pos = scan_pos
+
+        # Swap the two values
+        temp = my_list[min_pos]
+        my_list[min_pos] = my_list[cur_pos]
+        my_list[cur_pos] = temp
+    print("Selection Outside Loop")
+    print(selection_outside_loop)
+
+    print("Selection Inside Loop")
+    print(selection_inside_loop)
+
+
+def insertion_sort(my_list):
+    """ Sort a list using the insertion sort """
+    insertion_outside_loop = 0
+    insertion_inside_loop = 0
+    # Start at the second element (pos 1).
+    # Use this element to insert into the
+    # list.
+    for key_pos in range(1, len(my_list)):
+        insertion_outside_loop += 1
+
+        # Get the value of the element to insert
+        key_value = my_list[key_pos]
+
+        # Scan from right to the left (start of list)
+        scan_pos = key_pos - 1
+
+        # Loop each element, moving them up until
+        # we reach the position the
+        while (scan_pos >= 0) and (my_list[scan_pos] > key_value):
+            insertion_inside_loop += 1
+            my_list[scan_pos + 1] = my_list[scan_pos]
+            scan_pos = scan_pos - 1
+
+        # Everything's been moved out of the way, insert
+        # the key into the correct location
+        my_list[scan_pos + 1] = key_value
+
+    print("Insertion Outside Loop")
+    print(insertion_outside_loop)
+    print("Insertion Inside Loop")
+    print(insertion_inside_loop)
+# This will point out a list
+# For more information on the print formatting {:3}
+# see the chapter on print formatting.
+
+
+def print_list(my_list):
+    for item in my_list:
+        print(f"{item:3}", end="")
+    print()
+
+
+def main():
+    # Create two lists of the same random numbers
+    list_for_selection_sort = []
+    list_for_insertion_sort = []
+    list_size = 100
+    for i in range(list_size):
+        new_number = random.randrange(100)
+        list_for_selection_sort.append(new_number)
+        list_for_insertion_sort.append(new_number)
+
+    # Use the selection sort and print the result
+
+    selection_sort(list_for_selection_sort)
+    insertion_sort(list_for_insertion_sort)
+
+
+main()
+
+RESULTS:
+Selection Outside Loop
+100
+Selection Inside Loop
+4950
+Insertion Outside Loop
+99
+Insertion Inside Loop
+2301
