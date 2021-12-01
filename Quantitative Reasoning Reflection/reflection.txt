@@ -8,19 +8,58 @@ to use? For example, how did you use lists? “If” statements? Loops? Classes?
 Functions? Sample pieces of code? How did you decide which methods to apply?
 Feel free to give examples.
 
+Often times one of my first choices to figure out what I should do in my code
+is to look for an example in our online book to see the general layout of a
+similar program. Once I have a more clear goal is to determine the specific
+outcome I am attempting to get to in my code and work backwards from the end to
+the specific statement, loop, or variables that make this possible.
 
+Additionally, I would break down the program into sections where I would add on
+slowly to the program getting more complex and having more steps as I went.
+Keeping the end goal in mind helped to also determine the method to use, knowing
+what I wanted my program to do allowed me to find examples that were specific
+to what I needed to base on and which sections from it I need to pull into my
+own code.
 
 2. Explain how you communicate your solution (from one programmer to another)
 when writing the code. Show how variable names matter, how function names
 matter, how comments and structure make your code easier to read.
 
+One important way to communicate what the intention of a section is and what
+role it plays in the code is having comments. This was very helpful to me when
+pulling lines of code from an example and knowing which lines are needed to make
+my code work as the comment above it told what role it played in the larger
+program.
 
+Having very specific names for functions and variables was also very
+necessary to me as it helped me register what said item did and what it
+represented. Without being specific I would have a much harder time determining
+how to add lines of code and which function or variable I should use as often
+times if you are vague, multiple items could have similar purposes but very
+different outcomes in how they work in the larger code.
 
 3. How did you test and evaluate the accuracy of your code? When something
 didn’t work, describe how you debugged what the error was. Also, how do you
 determine if data returned is correct data?
 
+Many times I would run the code multiple times as I developed, so I would have
+fewer errors to fix and could see exactly which steps and additions are where
+the error is coming from. If I had a working game with a character that moves
+through a maze and can't go through walls, but I add a new block in the area and
+all of a sudden I can freely move through said blocks and walls I know that my
+changes made to the new block is the place to start when determining where I
+went wrong.
 
+I am also someone who typically will beat a dead horse to figure out where I
+went wrong before asking for someone else to help me. In this course I found
+this to be very limiting as I could often easily overlook something and get
+stuck for hours if I hadn't asked for help to correct a small error that
+prevented me from moving on.
+
+While this isn't a method or program assistant based on data, getting assistance
+was one of the most effective methods for me to better myself and get a deeper
+understanding of where I made mistakes rather than copying another persons code
+or driving myself crazy trying to figure it out alone.
 
 4. What are the limitations to using numerical methods to make decisions? For
 example, why can’t we just replace humans with algorithms? Why can’t we just
@@ -28,4 +67,24 @@ evaluate students based solely on test scores? Why can’t we evaluate teachers
 just on how their students do? What is the limitation to evaluating athletes
 just on their stats?
 
+As an elementary education major this question is very important to me and this
+class has greatly impacted my understanding of why this is true. While many
+sets of data can be analyzed to receive a numerical number that represents the
+accuracy or "score" of the data, this doesn't account for the variety of
+outside variables that could impact this score. Statistics are helpful in
+predictions and can identify areas of need for both student and teacher, but
+they are far from the full picture.
 
+While one of my codes may produce the correct answer to be returned or printed,
+this doesn't mean I used the correct method or that it is even using the correct
+data in the first place. Similarly, not getting a good score on the quiz or
+fully completing a lab to get points doesn't mean that I don't understand the
+material, or vice versa. Our understandings or materials change, and one score
+is not enough to accurately evaluate the scope of knowledge of a subject.
+
+Limiting our beliefs of others to only numerical representations of who they
+are does not allow for seeing the grey areas of a persons' ability that lies
+outside a score. Humans are more complex than computers and programs, we can
+get to a correct goal without taking each step 100% correctly according to the
+set of rules. And for these reasons humans and their abilities lie far outside
+the reach of numbers and statistics.
