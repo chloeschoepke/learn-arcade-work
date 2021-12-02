@@ -9,9 +9,11 @@ python -m arcade.examples.sprite_move_scrolling
 
 import random
 import arcade
+import math
 
 SPRITE_SCALING = 0.5
 
+PLAYER_SCALING = .7
 DEFAULT_SCREEN_WIDTH = 800
 DEFAULT_SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprite Move with Scrolling Screen Example"
@@ -25,6 +27,30 @@ CAMERA_SPEED = 0.1
 
 # How fast the character moves
 PLAYER_MOVEMENT_SPEED = 7
+
+# Close enough to not-moving to have the animation go to idle.
+DEAD_ZONE = 0.1
+
+# Constants used to track if the player is facing left or right
+RIGHT_FACING = 0
+LEFT_FACING = 1
+
+# How many pixels to move before we change the texture in the walking animation
+DISTANCE_TO_CHANGE_TEXTURE = 20
+
+
+class PlayerSprite(arcade.Sprite):
+    """ Player Sprite """
+    def __init__(self):
+        """ Init """
+        # Let parent initialize
+        super().__init__()
+
+        # Set our scale
+        self.scale = PLAYER_SCALING
+        image_locations = [0, 0, 32, 32]
+        textures = arcade.load_textures("frog_run.png", image_locations)
+        self.texture = textures[0]
 
 
 class MyGame(arcade.Window):
@@ -56,22 +82,22 @@ class MyGame(arcade.Window):
 
         # Sprite lists
         self.player_list = arcade.SpriteList()
-        self.wall_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = arcade.Sprite(":resources:images/animated_characters/female_person/femalePerson_idle.png",
-                                           scale=0.4)
+        self.player_sprite = PlayerSprite()
         self.player_sprite.center_x = 256
         self.player_sprite.center_y = 512
         self.player_list.append(self.player_sprite)
 
         map_name = "level1.json"
         self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+
+        # Pull the sprite layers out of the tile map
         self.wall_list = self.tile_map.sprite_lists["Walls"]
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                              self.wall_list,
-                                                             gravity_constant=0.5)
+                                                             gravity_constant=0.7)
 
         # Set the background color
         if self.tile_map.background_color:
