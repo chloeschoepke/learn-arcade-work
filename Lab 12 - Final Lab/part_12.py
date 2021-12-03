@@ -1,15 +1,14 @@
 """
 Scroll around a large screen.
 
-Artwork from https://kenney.nl
+Artwork for platformer tiles from https://kenney.nl
+Artwork for character from https://pixelfrog-assets.itch.io/pixel-adventure-1
 
 If Python and Arcade are installed, this example can be run from the command line with:
 python -m arcade.examples.sprite_move_scrolling
 """
 
-import random
 import arcade
-import math
 
 SPRITE_SCALING = 0.5
 
@@ -41,16 +40,50 @@ DISTANCE_TO_CHANGE_TEXTURE = 20
 
 class PlayerSprite(arcade.Sprite):
     """ Player Sprite """
+
     def __init__(self):
         """ Init """
         # Let parent initialize
         super().__init__()
-
         # Set our scale
         self.scale = PLAYER_SCALING
-        image_locations = [0, 0, 32, 32]
-        textures = arcade.load_textures("frog_run.png", image_locations)
-        self.texture = textures[0]
+
+        # Get textures
+        image_locations = [[0, 0, 32, 32],
+                           [32, 0, 32, 32],
+                           [64, 0, 32, 32],
+                           [96, 0, 32, 32],
+                           [128, 0, 32, 32]]
+
+        self.idle_textures = arcade.load_textures("frog_run.png", image_locations)
+
+        # What frame of the animation are we on now?
+        self.cur_texture_index = 0
+
+        # Set our texture to the current frame
+        self.texture = self.textures[self.cur_texture_index]
+
+        # Start a clock to time how fast to iterate the frames
+        self.time = 0.0
+
+    def update_animation(self, delta_time):
+
+        """ Update our player animations """
+
+        # Update the clock
+        self.time += delta_time
+
+        # Is it time to go to the next frame?
+        if self.time > 0.2:
+            # Reset the clock
+            self.time = 0
+            # Move the texture frame index forward one
+            self.cur_texture_index += 1
+            # If we ran out of frames, reset to zero
+            if self.cur_texture_index >= len(self.textures):
+                self.cur_texture_index = 0
+            # Set current texture to the frame index we are on
+            self.texture = self.textures[self.cur_texture_index]
 
 
 class MyGame(arcade.Window):
@@ -89,7 +122,7 @@ class MyGame(arcade.Window):
         self.player_sprite.center_y = 512
         self.player_list.append(self.player_sprite)
 
-        map_name = "level1.json"
+        map_name = "../Testing/level1.json"
         self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
 
         # Pull the sprite layers out of the tile map
@@ -116,7 +149,7 @@ class MyGame(arcade.Window):
 
         # Draw all the sprites.
         self.wall_list.draw()
-        self.player_list.draw()
+        self.player_list.draw(pixelated=True)
 
         # Select the (unscrolled) camera for our GUI
         self.camera_gui.use()
@@ -158,6 +191,7 @@ class MyGame(arcade.Window):
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
+        self.player_sprite.update_animation(delta_time)
 
         # Scroll the screen to the player
         self.scroll_to_player()
@@ -172,7 +206,7 @@ class MyGame(arcade.Window):
         """
 
         position = self.player_sprite.center_x - self.width / 2, \
-            self.player_sprite.center_y - self.height / 2
+                   self.player_sprite.center_y - self.height / 2
         self.camera_sprites.move_to(position, CAMERA_SPEED)
 
     def on_resize(self, width, height):
