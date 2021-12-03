@@ -98,6 +98,7 @@ class MyGame(arcade.Window):
         # Sprite lists
         self.player_list = None
         self.wall_list = None
+        self.background_list = None
 
         # Set up the player
         self.player_sprite = None
@@ -115,6 +116,8 @@ class MyGame(arcade.Window):
 
         # Sprite lists
         self.player_list = arcade.SpriteList()
+        self.wall_list = arcade.SpriteList()
+        self.background_list = arcade.SpriteList()
 
         # Set up the player
         self.player_sprite = PlayerSprite()
@@ -127,7 +130,7 @@ class MyGame(arcade.Window):
 
         # Pull the sprite layers out of the tile map
         self.wall_list = self.tile_map.sprite_lists["Walls"]
-
+        self.background_list = self.tile_map.sprite_lists["Background"]
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                              self.wall_list,
                                                              gravity_constant=0.7)
