@@ -12,7 +12,7 @@ import arcade
 
 SPRITE_SCALING = 0.5
 
-PLAYER_SCALING = .7
+PLAYER_SCALING = 2
 DEFAULT_SCREEN_WIDTH = 800
 DEFAULT_SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprite Move with Scrolling Screen Example"
@@ -61,7 +61,7 @@ class PlayerSprite(arcade.Sprite):
         self.cur_texture_index = 0
 
         # Set our texture to the current frame
-        self.texture = self.textures[self.cur_texture_index]
+        self.texture = self.idle_textures[self.cur_texture_index]
 
         # Start a clock to time how fast to iterate the frames
         self.time = 0.0
@@ -74,16 +74,17 @@ class PlayerSprite(arcade.Sprite):
         self.time += delta_time
 
         # Is it time to go to the next frame?
-        if self.time > 0.2:
+        if self.time > 0.05:
             # Reset the clock
             self.time = 0
             # Move the texture frame index forward one
             self.cur_texture_index += 1
+            print(self.cur_texture_index)
             # If we ran out of frames, reset to zero
-            if self.cur_texture_index >= len(self.textures):
+            if self.cur_texture_index >= len(self.idle_textures):
                 self.cur_texture_index = 0
             # Set current texture to the frame index we are on
-            self.texture = self.textures[self.cur_texture_index]
+            self.texture = self.idle_textures[self.cur_texture_index]
 
 
 class MyGame(arcade.Window):
