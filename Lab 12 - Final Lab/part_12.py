@@ -79,7 +79,7 @@ class PlayerSprite(arcade.Sprite):
             self.time = 0
             # Move the texture frame index forward one
             self.cur_texture_index += 1
-            print(self.cur_texture_index)
+
             # If we ran out of frames, reset to zero
             if self.cur_texture_index >= len(self.idle_textures):
                 self.cur_texture_index = 0
@@ -100,9 +100,11 @@ class MyGame(arcade.Window):
         self.player_list = None
         self.wall_list = None
         self.background_list = None
+        self.background_list = None
 
         # Set up the player
         self.player_sprite = None
+        self.score = 0
 
         # Physics engine so we don't run into walls.
         self.physics_engine = None
@@ -118,6 +120,7 @@ class MyGame(arcade.Window):
         # Sprite lists
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
+        self.background_list = arcade.SpriteList()
         self.background_list = arcade.SpriteList()
 
         # Set up the player
@@ -153,6 +156,7 @@ class MyGame(arcade.Window):
 
         # Draw all the sprites.
         self.wall_list.draw()
+        self.background_list.draw()
         self.player_list.draw(pixelated=True)
 
         # Select the (unscrolled) camera for our GUI
@@ -164,9 +168,8 @@ class MyGame(arcade.Window):
                                      self.width,
                                      40,
                                      arcade.color.ALMOND)
-        text = f"Scroll value: ({self.camera_sprites.position[0]:5.1f}, " \
-               f"{self.camera_sprites.position[1]:5.1f})"
-        arcade.draw_text(text, 10, 10, arcade.color.BLACK_BEAN, 20)
+
+        arcade.draw_text(f"Score: {self.score}", 10, 10, arcade.color.WHITE, 24)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
