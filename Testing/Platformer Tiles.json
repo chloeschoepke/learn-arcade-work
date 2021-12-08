@@ -8,7 +8,7 @@
  "margin":0,
  "name":"Platformer Tiles",
  "spacing":0,
- "tilecount":162,
+ "tilecount":164,
  "tiledversion":"1.7.1",
  "tileheight":128,
  "tiles":[
@@ -981,6 +981,18 @@
         {
          "id":161,
          "image":"..\/Platformer Tiles\/weightAttached.png",
+         "imageheight":128,
+         "imagewidth":128
+        }, 
+        {
+         "id":162,
+         "image":"..\/Platformer Tiles\/coin.png",
+         "imageheight":128,
+         "imagewidth":128
+        }, 
+        {
+         "id":163,
+         "image":"..\/Platformer Tiles\/coinGold.png",
          "imageheight":128,
          "imagewidth":128
         }],

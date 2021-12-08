@@ -101,6 +101,7 @@ class MyGame(arcade.Window):
         self.wall_list = None
         self.background_list = None
         self.background_list = None
+        self.coin_list = None
 
         # Set up the player
         self.player_sprite = None
@@ -122,6 +123,7 @@ class MyGame(arcade.Window):
         self.wall_list = arcade.SpriteList()
         self.background_list = arcade.SpriteList()
         self.background_list = arcade.SpriteList()
+        self.coin_list = arcade.SpriteList()
 
         # Set up the player
         self.player_sprite = PlayerSprite()
@@ -135,6 +137,7 @@ class MyGame(arcade.Window):
         # Pull the sprite layers out of the tile map
         self.wall_list = self.tile_map.sprite_lists["Walls"]
         self.background_list = self.tile_map.sprite_lists["Background"]
+        self.coin_list = self.tile_map.sprite_lists["Coins"]
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                              self.wall_list,
                                                              gravity_constant=0.7)
@@ -158,6 +161,7 @@ class MyGame(arcade.Window):
         self.wall_list.draw()
         self.background_list.draw()
         self.player_list.draw(pixelated=True)
+        self.coin_list.draw()
 
         # Select the (unscrolled) camera for our GUI
         self.camera_gui.use()
@@ -200,6 +204,12 @@ class MyGame(arcade.Window):
         self.physics_engine.update()
         self.player_sprite.update_animation(delta_time)
 
+        self.coin_list.update()
+        coins_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                              self.coin_list)
+        for coin in coins_hit_list:
+            coin.remove_from_sprite_lists()
+            self.score += 1
         # Scroll the screen to the player
         self.scroll_to_player()
 

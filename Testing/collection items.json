@@ -1,11 +1,24 @@
 { "columns":0,
+ "grid":
+    {
+     "height":1,
+     "orientation":"orthogonal",
+     "width":1
+    },
  "margin":0,
  "name":"collection items",
  "spacing":0,
- "tilecount":0,
+ "tilecount":1,
  "tiledversion":"1.7.1",
- "tileheight":1,
- "tilewidth":1,
+ "tileheight":128,
+ "tiles":[
+        {
+         "id":0,
+         "image":"..\/Platformer Tiles\/coin.png",
+         "imageheight":128,
+         "imagewidth":128
+        }],
+ "tilewidth":128,
  "type":"tileset",
  "version":"1.6"
 }
