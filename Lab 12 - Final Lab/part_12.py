@@ -1,11 +1,8 @@
 """
-Scroll around a large screen.
 
-Artwork for platformer tiles from https://kenney.nl
+Artwork for platform tiles from https://kenney.nl
 Artwork for character from https://pixelfrog-assets.itch.io/pixel-adventure-1
 
-If Python and Arcade are installed, this example can be run from the command line with:
-python -m arcade.examples.sprite_move_scrolling
 """
 
 import arcade
@@ -17,24 +14,14 @@ DEFAULT_SCREEN_WIDTH = 800
 DEFAULT_SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprite Move with Scrolling Screen Example"
 
-# How many pixels to keep as a minimum margin between the character
-# and the edge of the screen.
+
 VIEWPORT_MARGIN = 220
-
-# How fast the camera pans to the player. 1.0 is instant.
 CAMERA_SPEED = 0.1
-
-# How fast the character moves
 PLAYER_MOVEMENT_SPEED = 7
-
-# Close enough to not-moving to have the animation go to idle.
 DEAD_ZONE = 0.1
 
-# Constants used to track if the player is facing left or right
 RIGHT_FACING = 0
 LEFT_FACING = 1
-
-# How many pixels to move before we change the texture in the walking animation
 DISTANCE_TO_CHANGE_TEXTURE = 20
 
 
@@ -102,10 +89,18 @@ class MyGame(arcade.Window):
         self.background_list = None
         self.background_list = None
         self.coin_list = None
+        self.coin_door_list = None
+        self.cave_door_list = None
+
+        # Set up sounds
+        self.coin_sound = arcade.load_sound("coin5.wav")
 
         # Set up the player
         self.player_sprite = None
         self.score = 0
+
+        map_name = "../Testing/level1.json"
+        self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
 
         # Physics engine so we don't run into walls.
         self.physics_engine = None
@@ -124,6 +119,8 @@ class MyGame(arcade.Window):
         self.background_list = arcade.SpriteList()
         self.background_list = arcade.SpriteList()
         self.coin_list = arcade.SpriteList()
+        self.coin_door_list = arcade.SpriteList()
+        self.cave_door_list = arcade.SpriteList()
 
         # Set up the player
         self.player_sprite = PlayerSprite()
@@ -131,13 +128,12 @@ class MyGame(arcade.Window):
         self.player_sprite.center_y = 512
         self.player_list.append(self.player_sprite)
 
-        map_name = "../Testing/level1.json"
-        self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
-
         # Pull the sprite layers out of the tile map
         self.wall_list = self.tile_map.sprite_lists["Walls"]
         self.background_list = self.tile_map.sprite_lists["Background"]
         self.coin_list = self.tile_map.sprite_lists["Coins"]
+        self.coin_door_list = self.tile_map.sprite_lists["Coin Door"]
+        self.cave_door_list = self.tile_map.sprite_lists["Cave Door"]
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                              self.wall_list,
                                                              gravity_constant=0.7)
@@ -147,14 +143,7 @@ class MyGame(arcade.Window):
             arcade.set_background_color(self.tile_map.background_color)
 
     def on_draw(self):
-        """
-        Render the screen.
-        """
-
-        # This command has to happen before we start drawing
         arcade.start_render()
-
-        # Select the camera we'll use to draw all our sprites
         self.camera_sprites.use()
 
         # Draw all the sprites.
@@ -162,6 +151,8 @@ class MyGame(arcade.Window):
         self.background_list.draw()
         self.player_list.draw(pixelated=True)
         self.coin_list.draw()
+        self.coin_door_list.draw()
+        self.cave_door_list.draw()
 
         # Select the (unscrolled) camera for our GUI
         self.camera_gui.use()
@@ -210,33 +201,45 @@ class MyGame(arcade.Window):
         for coin in coins_hit_list:
             coin.remove_from_sprite_lists()
             self.score += 1
+            arcade.play_sound(self.coin_sound)
+
+        self.coin_door_list.update()
+        coin_door_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                              self.coin_door_list)
+        for door in coin_door_list:
+            map_name = "../Testing/coinroom.json"
+            self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+            self.wall_list = self.tile_map.sprite_lists["Walls"]
+            self.background_list = self.tile_map.sprite_lists["Background"]
+            self.coin_list = self.tile_map.sprite_lists["Coins"]
+            self.coin_door_list = self.tile_map.sprite_lists["Coin Door"]
+            self.cave_door_list = self.tile_map.sprite_lists["Cave Door"]
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
+                                                                 self.wall_list,
+                                                                 gravity_constant=0.7)
+            self.player_sprite.center_x = 128
+            self.player_sprite.center_y = 128
+
+        self.cave_door_list.update()
+        cave_door_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                              self.cave_door_list)
+        for door in cave_door_list:
+            print("collide")
+
         # Scroll the screen to the player
         self.scroll_to_player()
 
     def scroll_to_player(self):
-        """
-        Scroll the window to the player.
-
-        if CAMERA_SPEED is 1, the camera will immediately move to the desired position.
-        Anything between 0 and 1 will have the camera move to the location with a smoother
-        pan.
-        """
-
         position = self.player_sprite.center_x - self.width / 2, \
                    self.player_sprite.center_y - self.height / 2
         self.camera_sprites.move_to(position, CAMERA_SPEED)
 
     def on_resize(self, width, height):
-        """
-        Resize window
-        Handle the user grabbing the edge and resizing the window.
-        """
         self.camera_sprites.resize(int(width), int(height))
         self.camera_gui.resize(int(width), int(height))
 
 
 def main():
-    """ Main function """
     window = MyGame(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SCREEN_TITLE)
     window.setup()
     arcade.run()
