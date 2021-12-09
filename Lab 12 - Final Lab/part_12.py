@@ -45,8 +45,12 @@ class MenuView(arcade.View):
                          DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 - 20,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
+        arcade.draw_text("Click mouse to return to menu",
+                         DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 - 60,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+
         arcade.draw_text("CLICK TO START",
-                         DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 - 100,
+                         DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 - 150,
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
@@ -75,6 +79,15 @@ class PlayerSprite(arcade.Sprite):
 
         self.idle_textures = arcade.load_textures("frog_run.png", image_locations)
 
+        # Get textures
+        image_locations = [[0, 0, 32, 32],
+                           [32, 0, 32, 32],
+                           [64, 0, 32, 32],
+                           [96, 0, 32, 32],
+                           [128, 0, 32, 32]]
+
+        self.idle_textures_left = arcade.load_textures("frog_run.png", image_locations, mirrored=True)
+        self.face_right = True
         # What frame of the animation are we on now?
         self.cur_texture_index = 0
 
@@ -90,7 +103,10 @@ class PlayerSprite(arcade.Sprite):
 
         # Update the clock
         self.time += delta_time
-
+        if self.change_x < 0:
+            self.face_right = False
+        elif self.change_x > 0:
+            self.face_right = True
         # Is it time to go to the next frame?
         if self.time > 0.05:
             # Reset the clock
@@ -102,7 +118,10 @@ class PlayerSprite(arcade.Sprite):
             if self.cur_texture_index >= len(self.idle_textures):
                 self.cur_texture_index = 0
             # Set current texture to the frame index we are on
-            self.texture = self.idle_textures[self.cur_texture_index]
+            if self.face_right:
+                self.texture = self.idle_textures[self.cur_texture_index]
+            else:
+                self.texture = self.idle_textures_left[self.cur_texture_index]
 
 
 class GameView(arcade.View):
@@ -348,6 +367,10 @@ class GameView(arcade.View):
         self.camera_sprites.resize(int(width), int(height))
         self.camera_gui.resize(int(width), int(height))
 
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ Use a mouse press to advance to the 'game' view. """
+        menu_view = MenuView()
+        self.window.show_view(menu_view)
 
 def main():
     window = arcade.Window(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
