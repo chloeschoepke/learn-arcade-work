@@ -209,7 +209,6 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         """ Movement and game logic """
-
         self.physics_engine.update()
 
         self.coin_list.update()

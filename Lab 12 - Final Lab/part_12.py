@@ -25,6 +25,37 @@ LEFT_FACING = 1
 DISTANCE_TO_CHANGE_TEXTURE = 20
 
 
+class MenuView(arcade.View):
+    def on_show(self):
+        """ Called when switching to this view"""
+        arcade.set_background_color(arcade.color.WHITE)
+
+    def on_draw(self):
+        """ Draw the menu """
+        arcade.start_render()
+        arcade.draw_text("Welcome to Frog Run",
+                         DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 + 100,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+
+        arcade.draw_text("Use arrow keys to move and jump",
+                        DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 + 20,
+                        arcade.color.BLACK, font_size=30, anchor_x="center")
+
+        arcade.draw_text("Collect all 60 coins to win",
+                         DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 - 20,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+
+        arcade.draw_text("CLICK TO START",
+                         DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 - 100,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ Use a mouse press to advance to the 'game' view. """
+        game_view = GameView()
+        game_view.setup()
+        self.window.show_view(game_view)
+
+
 class PlayerSprite(arcade.Sprite):
     """ Player Sprite """
 
@@ -74,14 +105,14 @@ class PlayerSprite(arcade.Sprite):
             self.texture = self.idle_textures[self.cur_texture_index]
 
 
-class MyGame(arcade.Window):
+class GameView(arcade.View):
     """ Main application class. """
 
-    def __init__(self, width, height, title):
+    def __init__(self):
         """
         Initializer
         """
-        super().__init__(width, height, title, resizable=True)
+        super().__init__()
 
         # Sprite lists
         self.player_list = None
@@ -92,6 +123,22 @@ class MyGame(arcade.Window):
         self.coin_door_list = None
         self.cave_door_list = None
         self.exit_door_list = None
+        self.room_list = []
+
+        # Load main level into empty list
+        map_name = "../Testing/level1.json"
+        self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+        self.room_list.append(self.tile_map)
+
+        # Load secret coin room into empty list
+        map_name = "../Testing/coinroom.json"
+        self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+        self.room_list.append(self.tile_map)
+
+        # Load cave level into empty list
+        map_name = "../Testing/level2.json"
+        self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+        self.room_list.append(self.tile_map)
 
         # Set up sounds
         self.coin_sound = arcade.load_sound("coin5.wav")
@@ -100,8 +147,7 @@ class MyGame(arcade.Window):
         self.player_sprite = None
         self.score = 0
 
-        map_name = "../Testing/level1.json"
-        self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+        self.tile_map = self.room_list[0]
 
         # Physics engine so we don't run into walls.
         self.physics_engine = None
@@ -141,6 +187,7 @@ class MyGame(arcade.Window):
                                                              self.wall_list,
                                                              gravity_constant=0.7)
 
+    def on_show(self):
         # Set the background color
         if self.tile_map.background_color:
             arcade.set_background_color(self.tile_map.background_color)
@@ -162,13 +209,30 @@ class MyGame(arcade.Window):
         self.camera_gui.use()
 
         # Draw the GUI
-        arcade.draw_rectangle_filled(self.width // 2,
+        arcade.draw_rectangle_filled(self.window.width // 2,
                                      20,
-                                     self.width,
+                                     self.window.width,
                                      40,
                                      arcade.color.ALMOND)
 
-        arcade.draw_text(f"Score: {self.score}", 10, 10, arcade.color.WHITE, 24)
+        arcade.draw_text(f"Score: {self.score}", 10, 10, arcade.color.BLACK, 24)
+
+        if self.score == 60:
+            arcade.draw_rectangle_filled(DEFAULT_SCREEN_WIDTH / 2,
+                                         DEFAULT_SCREEN_HEIGHT / 2,
+                                         DEFAULT_SCREEN_WIDTH,
+                                         DEFAULT_SCREEN_HEIGHT,
+                                         arcade.color.WHITE)
+            arcade.draw_text("CONGRATULATIONS",
+                             DEFAULT_SCREEN_WIDTH / 2,
+                             DEFAULT_SCREEN_HEIGHT / 2 + 50,
+                             arcade.color.BLACK,
+                             font_size=50, anchor_x="center")
+            arcade.draw_text("YOU WON",
+                             DEFAULT_SCREEN_WIDTH / 2,
+                             DEFAULT_SCREEN_HEIGHT / 2 - 50,
+                             arcade.color.BLACK,
+                             font_size=50, anchor_x="center")
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -185,23 +249,22 @@ class MyGame(arcade.Window):
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
-
-        if key == arcade.key.UP or key == arcade.key.DOWN:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
-            self.player_sprite.change_x = 0
+        if self.score < 60:
+            if key == arcade.key.UP or key == arcade.key.DOWN:
+                self.player_sprite.change_y = 0
+            elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+                self.player_sprite.change_x = 0
 
     def on_update(self, delta_time):
         """ Movement and game logic """
 
-        # Call update on all sprites (The sprites don't do much in this
-        # example though.)
-        self.physics_engine.update()
-        self.player_sprite.update_animation(delta_time)
+        if self.score < 60:
+            self.physics_engine.update()
+            self.player_sprite.update_animation(delta_time)
+            self.coin_list.update()
 
-        self.coin_list.update()
         coins_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
-                                                              self.coin_list)
+                                                                self.coin_list)
         for coin in coins_hit_list:
             coin.remove_from_sprite_lists()
             self.score += 1
@@ -211,8 +274,7 @@ class MyGame(arcade.Window):
         coin_door_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.coin_door_list)
         for door in coin_door_list:
-            map_name = "../Testing/coinroom.json"
-            self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+            self.tile_map = self.room_list[1]
             self.wall_list = self.tile_map.sprite_lists["Walls"]
             self.background_list = self.tile_map.sprite_lists["Background"]
             self.coin_list = self.tile_map.sprite_lists["Coins"]
@@ -229,8 +291,7 @@ class MyGame(arcade.Window):
         cave_door_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.cave_door_list)
         for door in cave_door_list:
-            map_name = "../Testing/level2.json"
-            self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+            self.tile_map = self.room_list[2]
             self.wall_list = self.tile_map.sprite_lists["Walls"]
             self.background_list = self.tile_map.sprite_lists["Background"]
             self.coin_list = self.tile_map.sprite_lists["Coins"]
@@ -247,8 +308,7 @@ class MyGame(arcade.Window):
         exit_door_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.exit_door_list)
         for door in exit_door_list:
-            map_name = "../Testing/level1.json"
-            self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+            self.tile_map = self.room_list[0]
             self.wall_list = self.tile_map.sprite_lists["Walls"]
             self.background_list = self.tile_map.sprite_lists["Background"]
             self.coin_list = self.tile_map.sprite_lists["Coins"]
@@ -265,8 +325,8 @@ class MyGame(arcade.Window):
         self.scroll_to_player()
 
     def scroll_to_player(self):
-        position = self.player_sprite.center_x - self.width / 2, \
-                   self.player_sprite.center_y - self.height / 2
+        position = self.player_sprite.center_x - self.window.width / 2, \
+                   self.player_sprite.center_y - self.window.height / 2
         self.camera_sprites.move_to(position, CAMERA_SPEED)
 
     def on_resize(self, width, height):
@@ -275,8 +335,9 @@ class MyGame(arcade.Window):
 
 
 def main():
-    window = MyGame(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SCREEN_TITLE)
-    window.setup()
+    window = arcade.Window(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
+    menu_view = MenuView()
+    window.show_view(menu_view)
     arcade.run()
 
 
