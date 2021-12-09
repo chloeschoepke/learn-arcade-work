@@ -91,6 +91,7 @@ class MyGame(arcade.Window):
         self.coin_list = None
         self.coin_door_list = None
         self.cave_door_list = None
+        self.exit_door_list = None
 
         # Set up sounds
         self.coin_sound = arcade.load_sound("coin5.wav")
@@ -121,6 +122,7 @@ class MyGame(arcade.Window):
         self.coin_list = arcade.SpriteList()
         self.coin_door_list = arcade.SpriteList()
         self.cave_door_list = arcade.SpriteList()
+        self.exit_door_list = arcade.SpriteList()
 
         # Set up the player
         self.player_sprite = PlayerSprite()
@@ -134,6 +136,7 @@ class MyGame(arcade.Window):
         self.coin_list = self.tile_map.sprite_lists["Coins"]
         self.coin_door_list = self.tile_map.sprite_lists["Coin Door"]
         self.cave_door_list = self.tile_map.sprite_lists["Cave Door"]
+        self.exit_door_list = self.tile_map.sprite_lists["Exit Door"]
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                              self.wall_list,
                                                              gravity_constant=0.7)
@@ -153,6 +156,7 @@ class MyGame(arcade.Window):
         self.coin_list.draw()
         self.coin_door_list.draw()
         self.cave_door_list.draw()
+        self.exit_door_list.draw()
 
         # Select the (unscrolled) camera for our GUI
         self.camera_gui.use()
@@ -214,6 +218,7 @@ class MyGame(arcade.Window):
             self.coin_list = self.tile_map.sprite_lists["Coins"]
             self.coin_door_list = self.tile_map.sprite_lists["Coin Door"]
             self.cave_door_list = self.tile_map.sprite_lists["Cave Door"]
+            self.exit_door_list = self.tile_map.sprite_lists["Exit Door"]
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                                  self.wall_list,
                                                                  gravity_constant=0.7)
@@ -224,7 +229,37 @@ class MyGame(arcade.Window):
         cave_door_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.cave_door_list)
         for door in cave_door_list:
-            print("collide")
+            map_name = "../Testing/level2.json"
+            self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+            self.wall_list = self.tile_map.sprite_lists["Walls"]
+            self.background_list = self.tile_map.sprite_lists["Background"]
+            self.coin_list = self.tile_map.sprite_lists["Coins"]
+            self.coin_door_list = self.tile_map.sprite_lists["Coin Door"]
+            self.cave_door_list = self.tile_map.sprite_lists["Cave Door"]
+            self.exit_door_list = self.tile_map.sprite_lists["Exit Door"]
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
+                                                                 self.wall_list,
+                                                                 gravity_constant=0.7)
+            self.player_sprite.center_x = 128
+            self.player_sprite.center_y = 128
+
+        self.exit_door_list.update()
+        exit_door_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                              self.exit_door_list)
+        for door in exit_door_list:
+            map_name = "../Testing/level1.json"
+            self.tile_map = arcade.load_tilemap(map_name, scaling=SPRITE_SCALING)
+            self.wall_list = self.tile_map.sprite_lists["Walls"]
+            self.background_list = self.tile_map.sprite_lists["Background"]
+            self.coin_list = self.tile_map.sprite_lists["Coins"]
+            self.coin_door_list = self.tile_map.sprite_lists["Coin Door"]
+            self.cave_door_list = self.tile_map.sprite_lists["Cave Door"]
+            self.exit_door_list = self.tile_map.sprite_lists["Exit Door"]
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
+                                                                 self.wall_list,
+                                                                 gravity_constant=0.7)
+            self.player_sprite.center_x = 128
+            self.player_sprite.center_y = 128
 
         # Scroll the screen to the player
         self.scroll_to_player()
