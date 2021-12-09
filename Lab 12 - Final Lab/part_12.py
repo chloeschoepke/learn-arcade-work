@@ -38,8 +38,8 @@ class MenuView(arcade.View):
                          arcade.color.BLACK, font_size=30, anchor_x="center")
 
         arcade.draw_text("Use arrow keys to move and jump",
-                        DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 + 20,
-                        arcade.color.BLACK, font_size=30, anchor_x="center")
+                         DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 + 20,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
 
         arcade.draw_text("Collect all 60 coins to win",
                          DEFAULT_SCREEN_WIDTH / 2, DEFAULT_SCREEN_HEIGHT / 2 - 20,
@@ -233,6 +233,17 @@ class GameView(arcade.View):
                              DEFAULT_SCREEN_HEIGHT / 2 - 50,
                              arcade.color.BLACK,
                              font_size=50, anchor_x="center")
+        if self.player_sprite.center_y < 0:
+            arcade.draw_text("GAME OVER",
+                             DEFAULT_SCREEN_WIDTH / 2,
+                             DEFAULT_SCREEN_HEIGHT / 2 + 50,
+                             arcade.color.BLACK,
+                             font_size=50, anchor_x="center")
+            arcade.draw_text("YOU DIED",
+                             DEFAULT_SCREEN_WIDTH / 2,
+                             DEFAULT_SCREEN_HEIGHT / 2 - 50,
+                             arcade.color.BLACK,
+                             font_size=50, anchor_x="center")
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -273,6 +284,7 @@ class GameView(arcade.View):
         self.coin_door_list.update()
         coin_door_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.coin_door_list)
+        # Move character to coin room when colliding with door
         for door in coin_door_list:
             self.tile_map = self.room_list[1]
             self.wall_list = self.tile_map.sprite_lists["Walls"]
@@ -290,6 +302,8 @@ class GameView(arcade.View):
         self.cave_door_list.update()
         cave_door_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.cave_door_list)
+
+        # Move character to cave level when colliding with door
         for door in cave_door_list:
             self.tile_map = self.room_list[2]
             self.wall_list = self.tile_map.sprite_lists["Walls"]
@@ -307,6 +321,7 @@ class GameView(arcade.View):
         self.exit_door_list.update()
         exit_door_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.exit_door_list)
+        # Move character to main level when colliding with exit door
         for door in exit_door_list:
             self.tile_map = self.room_list[0]
             self.wall_list = self.tile_map.sprite_lists["Walls"]
@@ -318,8 +333,8 @@ class GameView(arcade.View):
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                                  self.wall_list,
                                                                  gravity_constant=0.7)
-            self.player_sprite.center_x = 128
-            self.player_sprite.center_y = 128
+            self.player_sprite.center_x = 1700
+            self.player_sprite.center_y = 700
 
         # Scroll the screen to the player
         self.scroll_to_player()
