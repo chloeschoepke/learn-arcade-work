@@ -352,7 +352,7 @@ class GameView(arcade.View):
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite,
                                                                  self.wall_list,
                                                                  gravity_constant=0.7)
-            self.player_sprite.center_x = 1700
+            self.player_sprite.center_x = 1600
             self.player_sprite.center_y = 700
 
         # Scroll the screen to the player
